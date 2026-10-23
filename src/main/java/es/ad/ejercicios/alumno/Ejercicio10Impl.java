@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,7 +54,7 @@ public class Ejercicio10Impl implements Ejercicio10 {
 
 
     @Override public int numeroVentas(Path csv) throws IOException {
-    return leer(csv).size();
+    return (int)leer(csv).stream().count();
     }
 
     @Override public int unidadesTotales(Path csv) throws IOException {
@@ -81,7 +82,9 @@ public class Ejercicio10Impl implements Ejercicio10 {
     public Map<String, Integer> unidadesVendidasPorProducto(Path csv) throws IOException {
 
         return leer(csv).stream()
-                .collect(Collectors.groupingBy(Venta::producto, Collectors.summingInt(Venta::unidades)
+                .collect(Collectors.groupingBy(Venta::producto,
+                        () -> new TreeMap<>(), //crea un arbol ordenado
+                        Collectors.summingInt(Venta::unidades)
                 ));
     }
 
